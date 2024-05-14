@@ -1,5 +1,5 @@
 Nom du projet : ComBLE <br>
-Version du document : 1.0
+Version du document : 1.1
 
 # Introduction
 ## Présentation de l’entreprise
@@ -22,6 +22,12 @@ Le client doit avoir la possibilité de choisir le serveur.
 Le serveur doit pouvoir afficher l’information transmise.
 Outils
 J’utiliserai le langage Flutter avec l’IDE Android studio pour ce projet.
+
+**L'app affichera dans un premier temps, le choix d'être soit un serveur soit un client, s'il choisit d'être le client, il devra choisir le serveur a lequel il veut se connecter, si c'est un serveur, il doit attendre une connexion.
+Lorsque le client est connecté, il va pouvoir envoyer des messages et le serveur devrait pouvoir l'afficher.**
+
+## Outil disponible
+Pour ce projet j'utiliserai Flutter à l'aide Android studio, mais avec également un plugin, Flutter blue plus qui permet une connection en BLE plus efficace.
 
 ## Maquette
 Communication entre un client et un serveur.
