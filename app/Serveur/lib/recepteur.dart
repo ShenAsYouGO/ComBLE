@@ -89,8 +89,8 @@ class _BluetoothReceiverState extends State<BluetoothReceiver> {
     for (BluetoothDevice device in devicesList) {
       containers.add(
         ListTile(
-          title: Text(device.name == '' ? '(Unknown Device)' : device.name),
-          subtitle: Text(device.id.toString()),
+          title: Text(device.platformName == '' ? '(Unknown Device)' : device.name),
+          subtitle: Text(device.remoteId.toString()),
           onTap: () {
             connectToDevice(device);
           },
