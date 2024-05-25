@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:clientapp/sendmsg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,58 +15,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'BLE Scanner',
       routes: {
-        '/': (context) => BleScanner(),
-        '/home': (context) => home(),
+        '/': (context) => const BleScanner(),
       },
     );
   }
-}
-
-class home extends StatefulWidget {
-  const home({super.key});
-
-  @override
-  _homeState createState() => _homeState();
 }
 
 class BleScanner extends StatefulWidget {
   const BleScanner({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _BleScannerState createState() => _BleScannerState();
-}
-
-class _homeState extends State<home> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-              Text('You are connected to the device'),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Disconnect'),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _BleScannerState extends State<BleScanner> {
   FlutterBluePlus flutterBlue = FlutterBluePlus();
   List<BluetoothDevice> devices = [];
-  bool isLoggedIn = false;
   BluetoothDevice? connectedDevice;
   StreamSubscription<BluetoothConnectionState>? deviceConnection;
-
 
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
@@ -75,16 +42,21 @@ class _BleScannerState extends State<BleScanner> {
         connectedDevice = device;
       });
       // Listen to the connection state of this device
-      deviceConnection = device.connectionState.listen((BluetoothConnectionState state) {
+      deviceConnection =
+          device.connectionState.listen((BluetoothConnectionState state) {
         if (state == BluetoothConnectionState.connected) {
-          print('Device connected: ${device.platformName} (${device.remoteId})');
+          print(
+              'Device connected: ${device.platformName} (${device.remoteId})');
           // Update the state to reflect the connected device
           setState(() {
             //change the page to the next page
-            Navigator.pushNamed(context, '/home');
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Sendmsg();
+            }));
           });
         } else if (state == BluetoothConnectionState.disconnected) {
-          print('Device disconnected: ${device.platformName} (${device.remoteId})');
+          print(
+              'Device disconnected: ${device.platformName} (${device.remoteId})');
           setState(() {
             connectedDevice = null;
           });
@@ -96,10 +68,8 @@ class _BleScannerState extends State<BleScanner> {
   }
 
   void disconnectToDevice() async {
-    if (isLoggedIn = true) {
-      setState(() {
-        isLoggedIn = false;
-      });
+    if (connectedDevice != null &&
+        connectedDevice?.connectionState == "connected") {
       await connectedDevice?.disconnect();
     }
     // Once disconnected, you can perform operations on the device.
@@ -117,7 +87,7 @@ class _BleScannerState extends State<BleScanner> {
       for (ScanResult result in results) {
         if (!devices.contains(result.device)) {
           setState(() {
-            if(result.device.platformName != ''){
+            if (result.device.platformName != '') {
               devices.add(result.device);
             }
           });
@@ -130,7 +100,7 @@ class _BleScannerState extends State<BleScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isLoggedIn ? 'Logged' : 'BLE Scanner'),
+        title: const Text('BLE Scanner'),
       ),
       body: Column(
         children: <Widget>[
@@ -143,9 +113,6 @@ class _BleScannerState extends State<BleScanner> {
                   subtitle: Text(devices[index].remoteId.toString()),
                   onTap: () {
                     connectToDevice(devices[index]);
-                    setState(() {
-                      isLoggedIn = true;
-                    });
                   },
                 );
               },
@@ -159,7 +126,7 @@ class _BleScannerState extends State<BleScanner> {
                 height: 40,
                 width: 250,
                 child: FloatingActionButton(
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
                       devices.clear();
                     });
@@ -167,6 +134,21 @@ class _BleScannerState extends State<BleScanner> {
                   },
                   tooltip: 'Actualisé',
                   child: const Text('Actualisé'),
+                ),
+              ),
+              const SizedBox(width: 5),
+              SizedBox(
+                height: 40,
+                width: 70,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Sendmsg();
+                    }));
+                  },
+                  tooltip: 'Connect',
+                  child: const Text('Connect'),
                 ),
               ),
             ],
