@@ -1,20 +1,22 @@
-import 'package:clientapp/chatMessageModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:serveur_app/chatMessageModel.dart';
 
-class Sendmsg extends StatefulWidget {
+class Chat extends StatefulWidget {
   final BluetoothDevice? connectedDevice;
 
-  Sendmsg({required Key key, required this.connectedDevice}) : super(key: key);
+  Chat({required Key key, required this.connectedDevice}) : super(key: key);
+
   @override
-  _SendmsgState createState() => _SendmsgState();
+  _ChatState createState() => _ChatState();
 }
 
-class _SendmsgState extends State<Sendmsg> {
+class _ChatState extends State<Chat> {
   final myController = TextEditingController();
+  List<ChatMessage> messages = [];
   BluetoothCharacteristic? targetCharacteristic;
   List<BluetoothService> services = [];
-  List<ChatMessage> messages = [];
+//  List<BluetoothService> services = await r.device.discoverServices();
 
   @override
   Widget build(BuildContext context) {
@@ -119,8 +121,6 @@ class _SendmsgState extends State<Sendmsg> {
     String sentence = myController.text;
     List<int> asciiValues = sentence.codeUnits;
 
-    print(asciiValues);
-
     writeToCharacteristic(asciiValues);
     setState(() {
       messages.add(ChatMessage(
@@ -129,5 +129,25 @@ class _SendmsgState extends State<Sendmsg> {
     });
 
     print(myController.text);
+    print(asciiValues);
+  }
+
+  void readFromCharacteristic() async {
+    if (targetCharacteristic != null) {
+      var value = await targetCharacteristic!.read();
+      messages.add(ChatMessage(
+          messageContent: value.toString(), messageType: "receiver"));
+      print('Data read from characteristic: $value');
+    }
+  }
+
+  void enableNotifications(BluetoothCharacteristic characteristic) async {
+    await characteristic.setNotifyValue(true);
+    characteristic.lastValueStream.listen((value) {
+      setState(() {
+        readFromCharacteristic();
+      });
+      print('Notification received: $value');
+    });
   }
 }

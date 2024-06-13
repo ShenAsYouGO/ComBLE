@@ -1,8 +1,7 @@
 import 'dart:io';
-
+import 'package:clientapp/sendmsg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:serveur_app/chat.dart';
 
 class BLE extends StatelessWidget {
   const BLE({super.key});
@@ -82,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // ignore: use_build_context_synchronously
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Chat(
+      return Sendmsg(
         key: UniqueKey(),
         connectedDevice: null,
       );
