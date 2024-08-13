@@ -1,5 +1,7 @@
 Nom du projet : ComBLE <br>
 Version du document : 1.1
+ETAT : En cours, je compte continuer même en dehors de mon stage, je vais pouvoir m'y plonger dedans.
+ANWSER : 
 
 # Introduction
 ## Présentation de l’entreprise
