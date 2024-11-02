@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   get: ^4.6.6
   flutter_blue_plus: ^1.32.7
+  flutter_blue: ^0.8.0
+  flutter_ble_peripheral: ^1.2.5
 
 dev_dependencies:
   flutter_test:
